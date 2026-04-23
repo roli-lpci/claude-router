@@ -137,7 +137,7 @@ claude-router is part of the [Hermes Labs](https://hermes-labs.ai) open-source s
 - [**zer0dex**](https://github.com/hermes-labs-ai/zer0dex) — Dual-layer memory for AI agents
 - [**zer0lint**](https://github.com/hermes-labs-ai/zer0lint) — mem0 extraction diagnostics
 - [**suy-sideguy**](https://github.com/hermes-labs-ai/suy-sideguy) — Autonomous agent watchdog
-- [**quickthink**](https://github.com/roli-lpci/quickthink) — Planning scaffolding for local LLMs
+- [**quickthink**](https://github.com/hermes-labs-ai/quickthink) — Planning scaffolding for local LLMs
 
 ---
 
