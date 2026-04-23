@@ -1,6 +1,39 @@
 # claude-router
 
-Route Claude API calls to the cheapest model that works. 5 validated scaffolds, embedding-based task classification in ~10ms. Validated on 300+ blind-judged API calls.
+Claude teams overspend on Sonnet or Opus because nobody has a fast, repeatable way to decide when Haiku plus structure is enough.
+
+`claude-router` classifies a prompt locally, chooses the right Claude tier, and prepends the right scaffold when scaffolding actually improves quality.
+
+- "We default to Sonnet for everything because nobody trusts routing by hand."
+- "Some prompts need structure, but we keep discovering that too late."
+- "We know Haiku is cheaper, but we do not know when it is safe."
+- "Prompt reviews catch model-choice mistakes after the API bill already happened."
+
+```bash
+pip install claude-router
+```
+
+```python
+from claude_router import ClaudeRouter
+
+router = ClaudeRouter()
+result = router.route("Evaluate this research paper for methodological rigor")
+print(result["model"], result["scaffold_key"], result["cost_per_1k"])
+```
+
+```text
+claude-haiku-4-5 calibrated-scoring 0.0008
+```
+
+**When To Use It**
+
+Use `claude-router` when you already call Claude models and want a local, deterministic routing layer for eval, research, content, and review prompts.
+
+**When Not To Use It**
+
+Do not use `claude-router` as a general agent framework, as proof that these exact routes transfer to your workload, or if you do not want an Ollama-based local classifier in the loop.
+
+![claude-router preview](assets/preview.png)
 
 ## Results
 
@@ -128,17 +161,36 @@ Benchmarks: [benchmarks/](benchmarks/) | Raw citations: [scaffolds.json](scaffol
 
 Key experiments: 4-condition code/research crossover, scaffolds-vs-operational stress test, scaffolded Sonnet beats Opus 75% on research (6/8 blind wins, 140 API calls).
 
-## Hermes Labs Ecosystem
-
-claude-router is part of the [Hermes Labs](https://hermes-labs.ai) open-source suite:
-
-- [**lintlang**](https://github.com/hermes-labs-ai/lintlang) — Static linter for AI agent tool descriptions and system prompts
-- [**little-canary**](https://github.com/hermes-labs-ai/little-canary) — Prompt injection detection
-- [**zer0dex**](https://github.com/hermes-labs-ai/zer0dex) — Dual-layer memory for AI agents
-- [**zer0lint**](https://github.com/hermes-labs-ai/zer0lint) — mem0 extraction diagnostics
-- [**suy-sideguy**](https://github.com/hermes-labs-ai/suy-sideguy) — Autonomous agent watchdog
-- [**quickthink**](https://github.com/hermes-labs-ai/quickthink) — Planning scaffolding for local LLMs
+Need this calibrated to your pipeline? [Open an issue](https://github.com/hermes-labs-ai/claude-router/issues) with the task categories and failure cases you want to benchmark.
 
 ---
 
-Need this calibrated to your pipeline? [Open an issue](https://github.com/hermes-labs-ai/claude-router/issues) or reach out to [Hermes Labs](https://hermes-labs.ai) for custom scaffolds and production integration.
+## About Hermes Labs
+
+[Hermes Labs](https://hermes-labs.ai) builds AI audit infrastructure for enterprise AI systems — EU AI Act readiness, ISO 42001 evidence bundles, continuous compliance monitoring, agent-level risk testing. We work with teams shipping AI into regulated environments.
+
+**Our OSS philosophy — read this if you're deciding whether to depend on us:**
+
+- **Everything we release is free, forever.** MIT or Apache-2.0. No "open core," no SaaS tier upsell, no paid version with the features you actually need. You can run this repo commercially, without talking to us.
+- **We open-source our own infrastructure.** The tools we release are what Hermes Labs uses internally — we don't publish demo code, we publish production code.
+- **We sell audit work, not licenses.** If you want an ANNEX-IV pack, an ISO 42001 evidence bundle, gap analysis against the EU AI Act, or agent-level red-teaming delivered as a report, that's at [hermes-labs.ai](https://hermes-labs.ai). If you just want the code to run it yourself, it's right here.
+
+**The Hermes Labs OSS audit stack** (public, production-grade, no SaaS):
+
+**Static audit** (before deployment)
+- [**lintlang**](https://github.com/hermes-labs-ai/lintlang) — Static linter for AI agent configs, tool descriptions, system prompts. `pip install lintlang`
+- [**rule-audit**](https://github.com/hermes-labs-ai/rule-audit) — Static prompt audit — contradictions, coverage gaps, priority ambiguities
+- [**scaffold-lint**](https://github.com/hermes-labs-ai/scaffold-lint) — Scaffold budget + technique stacking. `pip install scaffold-lint`
+- [**intent-verify**](https://github.com/hermes-labs-ai/intent-verify) — Repo intent verification + spec-drift checks
+
+**Runtime observability** (while the agent runs)
+- [**little-canary**](https://github.com/hermes-labs-ai/little-canary) — Prompt injection detection via sacrificial canary-model probes
+- [**suy-sideguy**](https://github.com/hermes-labs-ai/suy-sideguy) — Runtime policy guard — user-space enforcement + forensic reports
+- [**colony-probe**](https://github.com/hermes-labs-ai/colony-probe) — Prompt confidentiality audit — detects system-prompt reconstruction
+
+**Regression & scoring** (to prove what changed)
+- [**hermes-jailbench**](https://github.com/hermes-labs-ai/hermes-jailbench) — Jailbreak regression benchmark. `pip install hermes-jailbench`
+- [**agent-convergence-scorer**](https://github.com/hermes-labs-ai/agent-convergence-scorer) — Score how similar N agent outputs are. `pip install agent-convergence-scorer`
+
+**Supporting infra**
+- [**zer0dex**](https://github.com/hermes-labs-ai/zer0dex) · [**forgetted**](https://github.com/hermes-labs-ai/forgetted) · [**quick-gate-python**](https://github.com/hermes-labs-ai/quick-gate-python) · [**quick-gate-js**](https://github.com/hermes-labs-ai/quick-gate-js) · [**repo-audit**](https://github.com/hermes-labs-ai/repo-audit)
