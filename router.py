@@ -4,7 +4,8 @@ claude-router: Route Claude API calls to the cheapest model that works.
 
 Zero-LLM task classifier using embedding centroids. ~10ms per classification.
 Injects task-specific scaffolds that make Haiku outperform Sonnet/Opus on
-eval, research, and content tasks. 11x cost reduction, blind-eval validated.
+eval, research, and content tasks. Substantial cost reduction versus an
+all-frontier-model baseline (projection from per-category benchmarks).
 
 Usage:
     from router import ClaudeRouter

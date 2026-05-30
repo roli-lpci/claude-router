@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "claude-router: local embedding-based model-tier and scaffold routing for Claude"
+abstract: >-
+  claude-router is an AI reliability tool that classifies each prompt locally
+  with an embedding model, then routes it to the right Claude tier and prepends
+  a task-specific scaffold only when scaffolding measurably improves quality —
+  closing the silent failure mode where teams default to Sonnet or Opus and
+  overspend without a repeatable rule for when a cheaper tier plus structure is
+  enough.
+type: software
+version: 1.0.0
+date-released: 2026-04-17
+authors:
+  - family-names: "Bosch Rodriguez"
+    given-names: "Rolando"
+    orcid: "https://orcid.org/0009-0005-4896-1112"
+    affiliation: "Hermes Labs"
+license: MIT
+keywords:
+  - AI reliability
+  - LLM reliability
+  - silent failure modes
+  - scaffold-as-state
+  - model routing
+  - embedding classification
+  - Claude
+  - cost optimization
+repository-code: "https://github.com/hermes-labs-ai/claude-router"
+url: "https://github.com/hermes-labs-ai/claude-router"
