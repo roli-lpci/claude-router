@@ -1,8 +1,8 @@
 # claude-router
 
-Claude teams overspend on Sonnet or Opus because nobody has a fast, repeatable way to decide when Haiku plus structure is enough.
+claude-router is a local prompt router that picks the right Claude model tier and prepends the right scaffold using local embeddings, before you call the API.
 
-`claude-router` classifies a prompt locally, chooses the right Claude tier, and prepends the right scaffold when scaffolding actually improves quality.
+Claude teams overspend on Sonnet or Opus because nobody has a fast, repeatable way to decide when Haiku plus structure is enough. claude-router classifies a prompt locally, chooses the right Claude tier, and prepends the right scaffold when scaffolding actually improves quality.
 
 - "We default to Sonnet for everything because nobody trusts routing by hand."
 - "Some prompts need structure, but we keep discovering that too late."
@@ -42,7 +42,7 @@ Do not use `claude-router` as a general agent framework, as proof that these exa
 | Eval/scoring | Haiku + scaffold | $0.06 | MAE 1.0 (vs Sonnet raw: 1.2) |
 | Research | Sonnet + scaffold | $0.28 | 8.49/10 (vs Opus raw: 7.45) |
 | Content | Haiku + scaffold | $0.06 | 4/5 blind wins vs Sonnet |
-| Code review | Sonnet (raw) | $0.28 | 8.7/10 (vs Opus: 8.1) |
+| Code review | Sonnet (raw) | $0.28 | Sonnet raw preferred; scaffolds hurt coding |
 
 ## Anti-findings
 
@@ -93,7 +93,7 @@ python router.py "Write a blog post about Q2 results"
 3. Look up routing table: category → model + scaffold
 4. Return model ID and scaffold text
 
-No LLM calls for routing. All locally in ~10ms. Low confidence (router accuracy 74% on 26-prompt benchmark) defaults to Opus.
+No LLM calls for routing. All locally in ~10ms. When the classifier is not confident in a category, the router defaults to Opus.
 
 ## The 5 scaffolds
 
@@ -151,7 +151,7 @@ router = ClaudeRouter(
 
 - Requires Ollama locally (for embeddings)
 - Centroids trained on one task distribution — test on your workload
-- Router misclassifies 26% of tasks — low confidence defaults to Opus
+- The classifier is not perfect — ambiguous prompts fall to low confidence and default to Opus
 - Anti-findings are real: scaffolds on coding/operational make things worse
 - Lite mode (Haiku-first routing for max savings) planned for v1.1
 
@@ -167,30 +167,4 @@ Need this calibrated to your pipeline? [Open an issue](https://github.com/hermes
 
 ## About Hermes Labs
 
-[Hermes Labs](https://hermes-labs.ai) builds AI audit infrastructure for enterprise AI systems — EU AI Act readiness, ISO 42001 evidence bundles, continuous compliance monitoring, agent-level risk testing. We work with teams shipping AI into regulated environments.
-
-**Our OSS philosophy — read this if you're deciding whether to depend on us:**
-
-- **Everything we release is free, forever.** MIT or Apache-2.0. No "open core," no SaaS tier upsell, no paid version with the features you actually need. You can run this repo commercially, without talking to us.
-- **We open-source our own infrastructure.** The tools we release are what Hermes Labs uses internally — we don't publish demo code, we publish production code.
-- **We sell audit work, not licenses.** If you want an ANNEX-IV pack, an ISO 42001 evidence bundle, gap analysis against the EU AI Act, or agent-level red-teaming delivered as a report, that's at [hermes-labs.ai](https://hermes-labs.ai). If you just want the code to run it yourself, it's right here.
-
-**The Hermes Labs OSS audit stack** (public, open-source, no SaaS):
-
-**Static audit** (before deployment)
-- [**lintlang**](https://github.com/hermes-labs-ai/lintlang) — Static linter for AI agent configs, tool descriptions, system prompts. `pip install lintlang`
-- [**rule-audit**](https://github.com/hermes-labs-ai/rule-audit) — Static prompt audit — contradictions, coverage gaps, priority ambiguities
-- [**scaffold-lint**](https://github.com/hermes-labs-ai/scaffold-lint) — Scaffold budget + technique stacking. `pip install scaffold-lint`
-- [**intent-verify**](https://github.com/hermes-labs-ai/intent-verify) — Repo intent verification + spec-drift checks
-
-**Runtime observability** (while the agent runs)
-- [**little-canary**](https://github.com/hermes-labs-ai/little-canary) — Prompt injection detection via sacrificial canary-model probes
-- [**suy-sideguy**](https://github.com/hermes-labs-ai/suy-sideguy) — Runtime policy guard — user-space enforcement + forensic reports
-- [**colony-probe**](https://github.com/hermes-labs-ai/colony-probe) — Prompt confidentiality audit — detects system-prompt reconstruction
-
-**Regression & scoring** (to prove what changed)
-- [**hermes-jailbench**](https://github.com/hermes-labs-ai/hermes-jailbench) — Jailbreak regression benchmark. `pip install hermes-jailbench`
-- [**agent-convergence-scorer**](https://github.com/hermes-labs-ai/agent-convergence-scorer) — Score how similar N agent outputs are. `pip install agent-convergence-scorer`
-
-**Supporting infra**
-- [**zer0dex**](https://github.com/hermes-labs-ai/zer0dex) · [**forgetted**](https://github.com/hermes-labs-ai/forgetted) · [**quick-gate-python**](https://github.com/hermes-labs-ai/quick-gate-python) · [**quick-gate-js**](https://github.com/hermes-labs-ai/quick-gate-js) · [**repo-audit**](https://github.com/hermes-labs-ai/repo-audit)
+Hermes Labs is an independent AI-reliability lab building open-source tools that catch silent failure modes in production AI. More at [hermes-labs.ai](https://hermes-labs.ai).

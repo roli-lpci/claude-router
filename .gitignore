@@ -13,3 +13,4 @@ venv/
 .idea/
 .vscode/
 __pycache__/
+.hermes-seal.yaml
