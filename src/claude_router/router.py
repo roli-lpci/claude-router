@@ -358,6 +358,12 @@ class ClaudeRouter:
 
 def _cli():
     """CLI entry point for claude-router."""
+    if len(sys.argv) > 1 and sys.argv[1] in ("--version", "-V"):
+        from claude_router import __version__
+
+        print(f"claude-router {__version__}")
+        return
+
     router = ClaudeRouter()
 
     if len(sys.argv) > 1 and sys.argv[1] == "--eval":

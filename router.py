@@ -358,6 +358,15 @@ class ClaudeRouter:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] in ("--version", "-V"):
+        from importlib.metadata import PackageNotFoundError, version
+
+        try:
+            print(f"claude-router {version('claude-router')}")
+        except PackageNotFoundError:
+            print("claude-router (source checkout; version unknown)")
+        sys.exit(0)
+
     router = ClaudeRouter()
 
     if len(sys.argv) > 1:
