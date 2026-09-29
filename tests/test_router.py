@@ -48,3 +48,19 @@ def test_build_prompt_includes_scaffold(monkeypatch: pytest.MonkeyPatch, router:
 def test_empty_input_fails_fast(router: ClaudeRouter) -> None:
     with pytest.raises(ValueError, match="Input text cannot be empty"):
         router.route("   ")
+
+
+def test_cli_version_flag_does_not_route_it_as_a_query(monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    from claude_router import __version__
+    from claude_router import router as router_module
+
+    monkeypatch.setattr(router_module.sys, "argv", ["claude-router", "--version"])
+    monkeypatch.setattr(
+        router_module,
+        "ClaudeRouter",
+        lambda *a, **k: pytest.fail("--version must not build the router or call the embedder"),
+    )
+
+    router_module._cli()
+
+    assert capsys.readouterr().out.strip() == f"claude-router {__version__}"
