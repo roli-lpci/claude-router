@@ -106,7 +106,7 @@ Or CLI:
 
 ```bash
 claude-router "Write a blog post about Q2 results"
-claude-router --version   # prints the installed release; never routed as a prompt
+python -c "from importlib.metadata import version; print(version('claude-router'))"   # prints the installed release (the `--version` flag exists only in source checkouts newer than 1.1.1; on the released wheel it would be routed as a prompt)
 ```
 
 From a source checkout without installing, `python router.py "..."` runs the same router.
